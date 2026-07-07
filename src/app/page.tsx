@@ -11,6 +11,7 @@ const YOUTUBE_ID = "4QDk3of-SLA";
 const PRICE = "\u20A620,000"; // Naira symbol + amount
 const TOTAL_VALUE = "\u20A6150,000";
 const WHATSAPP_DM = "https://wa.me/2348027842411"; // Coach Jerryminds WhatsApp DM
+const SELAR_LINK = "https://selar.com/p/524ran65r6?affiliate=5fi791m859"; // TODO: replace with your real Selar checkout link
 
 const PAINS = [
   "I want to make money online, but every 'system' I try just leaves me more confused than when I started.",
@@ -39,7 +40,7 @@ const BENEFITS = [
   { icon: "target", title: "A Step-by-Step System", desc: "A clear daily plan. You always know the exact next action — no more guesswork." },
   { icon: "layers", title: "Learn Affiliate Marketing", desc: "Understand offers, funnels, and traffic from absolute scratch — explained simply." },
   { icon: "shield", title: "Avoid Beginner Mistakes", desc: "Skip the expensive traps that cost most beginners months of wasted time." },
-  { icon: "bolt", title: "Fast Implementation", desc: "Set everything up in under 30 minutes a day — built around a busy schedule." },
+  { icon: "bolt", title: "Fast Implementation", desc: "Set everything up in 1 to 2 hours a day — built around a busy schedule." },
   { icon: "users", title: "Real Community Support", desc: "Never get stuck on your own — get answers and feedback from people who get it." },
 ];
 
@@ -75,7 +76,7 @@ const CREATOR = {
   stats: [
     { num: "5,000+", label: "Students guided" }, // [REVIEW] confirm number
     { num: "6+ yrs", label: "In affiliate marketing" }, // [REVIEW] confirm
-    { num: "7 Days", label: "To your first funnel" },
+    { num: "7 Days", label: "To your first income funnel." },
   ],
 };
 
@@ -85,7 +86,7 @@ const FAQS = [
   { q: "Why is the price so low?", a: "This is a special launch price to help beginners get started without a huge upfront cost. The goal is to get you real results fast — the price may increase as the bootcamp grows." },
   { q: "Is there a guarantee?", a: "Yes. Try the full bootcamp for 7 days. If you do not feel it is worth many times what you paid, just send an email and you get a full refund — no questions asked." },
   { q: "Do I need any experience or tech skills?", a: "No. This is built for complete beginners. If you can follow a recipe, you can follow the daily steps. Everything is shown click-by-click." },
-  { q: "How much time does it take each day?", a: "Roughly 20 to 30 minutes a day for 7 days. You keep access to every lesson, so you can move at your own pace with no pressure." },
+  { q: "How much time does it take each day?", a: "Roughly 1 to 2 hours a day for 7 days. You keep access to every lesson, so you can move at your own pace with no pressure." },
   { q: "Do I need my own product or an audience?", a: "No — that is the whole point. You will learn to promote other people's proven offers without needing a following first." },
   { q: "When do I get access?", a: "Immediately after checkout. The moment your payment is confirmed, you are in and can start Day 1 right away." },
 ];
@@ -236,16 +237,14 @@ function LeadForm() {
   const [email, setEmail] = useState("");
   const [errors, setErrors] = useState<{ name?: string; email?: string }>({});
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
-  const [redirectUrl, setRedirectUrl] = useState<string | null>(null);
 
   useEffect(() => {
-    if (status !== "success" || !redirectUrl) return;
-    if (redirectUrl.startsWith("[REVIEW]")) return; // not configured yet
+    if (status !== "success") return;
     const t = setTimeout(() => {
-      window.location.href = redirectUrl;
+      window.location.href = SELAR_LINK;
     }, 1800);
     return () => clearTimeout(t);
-  }, [status, redirectUrl]);
+  }, [status]);
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -262,38 +261,31 @@ function LeadForm() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name: name.trim(), email: email.trim() }),
       });
-      const data = await res.json();
-      if (res.ok && data.ok) {
-        setRedirectUrl(data.redirectUrl || null);
-        setStatus("success");
-      } else {
-        setErrors(data.errors || { email: "Something went wrong. Please try again." });
-        setStatus("error");
+      if (!res.ok) {
+        const data = await res.json().catch(() => null);
+        if (data?.errors) {
+          setErrors(data.errors);
+          setStatus("error");
+          return;
+        }
       }
     } catch {
-      setErrors({ email: "Network error. Please check your connection and try again." });
-      setStatus("error");
+      console.error("Lead capture failed; proceeding to checkout anyway.");
     }
+    setStatus("success");
   }
 
   if (status === "success") {
-    const needsConfig = !redirectUrl || redirectUrl.startsWith("[REVIEW]");
     return (
       <div className="form-success">
         <div className="form-success__icon">
           <Icon name="check" />
         </div>
         <h3 className="h3 mt-4">You are in, {name.split(" ")[0] || "friend"}!</h3>
-        <p className="muted mt-2">
-          {needsConfig
-            ? "Your spot is reserved and your details were captured successfully."
-            : "Taking you to secure checkout now..."}
-        </p>
-        {!needsConfig && (
-          <a className="btn btn--primary btn--lg mt-6" href={redirectUrl as string}>
-            Continue to Checkout <Icon name="arrow" />
-          </a>
-        )}
+        <p className="muted mt-2">Taking you to secure checkout now...</p>
+        <a className="btn btn--primary btn--lg mt-6" href={SELAR_LINK}>
+          Continue to Checkout <Icon name="arrow" />
+        </a>
       </div>
     );
   }
@@ -419,7 +411,7 @@ export default function Page() {
       {/* ===== SECTION 1 — ANNOUNCEMENT BAR ===== */}
       <div className="annbar">
         <div className="container annbar__inner">
-          <span>Launch special: Full bootcamp just {PRICE} (normally {TOTAL_VALUE}).</span>
+          <span>Launch special: Full bootcamp </span>
           <a className="annbar__link" href="#offer">See the deal</a>
         </div>
       </div>
@@ -466,13 +458,14 @@ export default function Page() {
               <Icon name="check" /> For beginners who want a proven path to their first online commissions
             </span>
             <h1 className="hero__title" data-animate>
-              How to Launch Your First <span className="hl">Affiliate Funnel</span> in 7 Days —
-              Even If You've Never Made a Dollar Online
+              Pathway to Earning <span className="hl">$500 to $900 Monthly</span> Using
+              a Simple System — Working Online From Anywhere, Even as a Complete Beginner!
             </h1>
             <p className="hero__sub" data-animate>
-              A 7-day bootcamp that hands you the exact daily system to build a working
-              affiliate funnel, pick winning offers, and start driving traffic — no tech skills,
-              no audience, no guesswork.
+              Discover The 7 Days Results Bootcamp That Shows Ordinary Nigerians And Africans How To
+              Build A Simple Affiliate Sales System That Can Generate MULTIPLE Sales Daily.
+              <br /><br />
+              No Website. No Product Creation. No Technical Skills. No Previous Experience Required.
             </p>
 
             <div className="hero__media" data-animate>
@@ -481,13 +474,13 @@ export default function Page() {
 
             <div className="hero__badges" data-animate>
               <span className="badge"><Icon name="check" /> Beginner Friendly</span>
-              <span className="badge"><Icon name="check" /> Under 30 min / day</span>
+              <span className="badge"><Icon name="check" /> 1 to 2 hours daily</span>
               <span className="badge"><Icon name="check" /> Instant Access</span>
             </div>
 
             <div className="hero__cta-wrap" data-animate>
               <a ref={heroCtaRef} className="btn btn--primary btn--lg" href="#offer">
-                Get Instant Access — {PRICE}
+                Get Instant Access
               </a>
               <div className="mt-4">
                 <a className="btn btn--whatsapp" href={WHATSAPP_DM} target="_blank" rel="noopener noreferrer">
@@ -575,7 +568,7 @@ export default function Page() {
                   <div className="card">
                     <div className="card__icon"><Icon name="layers" /></div>
                     <h3 className="card__title">What it is</h3>
-                    <p className="card__desc">A focused bootcamp that walks you through building a real affiliate funnel, one day at a time.</p>
+                    <p className="card__desc">Real affiliate sales systems, stage by stage and step by step!</p>
                   </div>
                   <div className="card">
                     <div className="card__icon"><Icon name="rocket" /></div>
@@ -588,7 +581,7 @@ export default function Page() {
                   <h3 className="card__title">Why it works</h3>
                   <p className="card__desc">Most beginners fail because they lack a sequence, not a strategy. This gives you the sequence — and removes the overwhelm that makes people quit.</p>
                 </div>
-                <a className="btn btn--primary btn--lg btn--block mt-6" href="#offer">Get Instant Access — {PRICE} <Icon name="arrow" /></a>
+                <a className="btn btn--primary btn--lg btn--block mt-6" href="#offer">Get Instant Access <Icon name="arrow" /></a>
               </div>
             </div>
           </div>
@@ -730,7 +723,7 @@ export default function Page() {
                 </div>
                 <div className="creator-cta mt-8">
                   <a className="btn btn--primary btn--lg" href="#offer">
-                    Learn With Me — {PRICE} <Icon name="arrow" />
+                    Learn With Me <Icon name="arrow" />
                   </a>
                   <a className="btn btn--whatsapp btn--lg" href={WHATSAPP_DM} target="_blank" rel="noopener noreferrer">
                     <Icon name="whatsapp" /> Message Me Directly
@@ -765,7 +758,7 @@ export default function Page() {
                 <span className="receipt__price-label">Today, your price:</span>
                 <span className="receipt__price-val">{PRICE}</span>
               </div>
-              <a className="btn btn--primary btn--lg btn--block mt-6" href="#final">Get Instant Access — {PRICE} <Icon name="arrow" /></a>
+              <a className="btn btn--primary btn--lg btn--block mt-6" href="#final">Get Instant Access <Icon name="arrow" /></a>
               <p className="form-note mt-4">
                 <Icon name="lock" style={{ width: 14, height: 14, verticalAlign: "-2px" }} /> Secure checkout · Instant access · 7-day money-back guarantee
               </p>
@@ -784,9 +777,10 @@ export default function Page() {
               <span className="guarantee__seal">MONEY-BACK GUARANTEE</span>
               <h2 className="h2 mt-6">Try It Risk-Free for 7 Days</h2>
               <p className="lead muted mt-4">
-                Go through the full bootcamp. If you do not feel it is worth many times what you
-                paid, send one email within 7 days and you get a full refund — every single Naira.
-                No questions, no hassle, no awkward forms.
+                Go through the full Bootcamp. Implement and execute all the steps — affiliate sales
+                systems really work. If you feel it's not worth what you paid for, send one email
+                within 7 days and you get a full refund — every single Naira. No questions, no
+                hassle, no awkward forms.
               </p>
               <p className="mt-6" style={{ fontWeight: 700, color: "var(--color-primary)" }}>
                 The risk is on me, not you.
@@ -854,7 +848,7 @@ export default function Page() {
               first funnel live by this time next week.
             </p>
             <div className="mt-8">
-              <a className="btn btn--primary btn--lg" href="#final">Get Instant Access — {PRICE} <Icon name="arrow" /></a>
+              <a className="btn btn--primary btn--lg" href="#final">Get Instant Access <Icon name="arrow" /></a>
             </div>
           </div>
         </section>
