@@ -17,23 +17,21 @@ const PAINS = [
   "I want to make money online, but every 'system' I try just leaves me more confused than when I started.",
   "I have joined opportunities before and made exactly zero — so I am not sure who I can actually trust anymore.",
   "I do not have a product, an audience, or any tech skills, so I have no idea where to even begin.",
-  "I am drowning in free YouTube advice that never gives me the actual step-by-step.",
-  "I keep telling myself 'next month' — while watching everyone else post their results.",
 ];
 
 const DAYS = [
-  { n: "01", icon: "target", title: "The Foundation", desc: "Lock in the right mindset, pick your model, and set one clear 7-day target so you stop chasing shiny objects.", value: "\u20A612,000" },
-  { n: "02", icon: "layers", title: "Pick a Winning Offer", desc: "Choose an affiliate offer people actually buy using a simple 3-point check — no more guessing.", value: "\u20A612,000" },
-  { n: "03", icon: "rocket", title: "Build Your Capture Page", desc: "Set up a clean opt-in page with zero coding that turns cold visitors into leads.", value: "\u20A615,000" },
-  { n: "04", icon: "mail", title: "Automated Follow-Up", desc: "Write a short email sequence that builds trust and converts while you sleep.", value: "\u20A615,000" },
-  { n: "05", icon: "globe", title: "Your First Traffic", desc: "Plug in beginner-friendly traffic so real humans actually see your offer — fast.", value: "\u20A618,000" },
-  { n: "06", icon: "chart", title: "Track & Optimize", desc: "See exactly what is working, fix the leaks, and double down on your winners.", value: "\u20A612,000" },
-  { n: "07", icon: "bolt", title: "Scale the Winners", desc: "Turn your first results into a repeatable system you can keep growing.", value: "\u20A613,000" },
+  { n: "01", icon: "target", title: "The Foundation", desc: "Lock in the right mindset, pick your model, and set one clear 7-day target so you stop chasing shiny objects." },
+  { n: "02", icon: "layers", title: "Pick a Winning Offer", desc: "Choose an affiliate offer people actually buy using a simple 3-point check — no more guessing."},
+  { n: "03", icon: "rocket", title: "Build Your Capture Page", desc: "Set up a clean opt-in page with zero coding that turns cold visitors into leads."},
+  { n: "04", icon: "mail", title: "Automated Follow-Up", desc: "Write a short email sequence that builds trust and converts while you sleep."},
+  { n: "05", icon: "globe", title: "Your First Traffic", desc: "Plug in beginner-friendly traffic so real humans actually see your offer — fast."},
+  { n: "06", icon: "chart", title: "Track & Optimize", desc: "See exactly what is working, fix the leaks, and double down on your winners."},
+  { n: "07", icon: "bolt", title: "Scale the Winners", desc: "Turn your first results into a repeatable system you can keep growing."},
 ];
 
 const BONUSES = [
-  { icon: "users", title: "Private Community Access", desc: "Ask questions, get feedback, and stay accountable with other beginners on the same path.", value: "\u20A635,000", bonus: true },
-  { icon: "gift", title: "Swipe Files & Templates", desc: "Copy-paste email scripts, page templates, and offer checklists that save you hours.", value: "\u20A618,000", bonus: true },
+  { icon: "users", title: "Private Community Access", desc: "Ask questions, get feedback, and stay accountable with other beginners on the same path."},
+  { icon: "gift", title: "Swipe Files & Templates", desc: "Copy-paste email scripts, page templates, and offer checklists that save you hours."},
 ];
 
 const BENEFITS = [
@@ -497,12 +495,39 @@ export default function Page() {
             </div>
           </div>
         </section>
+                {/* ===== SECTION 11 — WHO IT'S FOR / NOT FOR ===== */}
+        <section className="section section--surface">
+          <div className="container">
+            <div className="section-head" data-animate>
+              <h2 className="h2">This Right for You?</h2>
+            </div>
+            <div className="fornot mt-8">
+              <div className="fornot__col fornot__col--yes" data-animate>
+                <h3 className="fornot__h">This Is For You If...</h3>
+                <ul className="fornot__list">
+                  {FOR_YOU.map((t) => (
+                    <li className="fornot__item" key={t}><Icon name="check" style={{ width: 20, height: 20 }} /><span>{t}</span></li>
+                  ))}
+                </ul>
+              </div>
+              <div className="fornot__col fornot__col--no" data-animate>
+                <h3 className="fornot__h">This Is NOT For You If...</h3>
+                <ul className="fornot__list">
+                  {NOT_FOR_YOU.map((t) => (
+                    <li className="fornot__item" key={t}><Icon name="x" style={{ width: 20, height: 20 }} /><span>{t}</span></li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
 
         {/* ===== SECTION 3 — THE PROBLEM ===== */}
         <section className="section section--surface" id="problem">
           <div className="container">
             <div className="section-head" data-animate>
-              <h2 className="h2">Sound Familiar?</h2>
+              <h2 className="h2">Does This Sound Familiar?</h2>
               <p className="lead muted mt-4">
                 If you have been trying to figure out how to make money online, you probably
                 recognize a few of these.
@@ -603,7 +628,6 @@ export default function Page() {
                   <span className="card__num">Day {d.n}</span>
                   <h3 className="card__title">{d.title}</h3>
                   <p className="card__desc">{d.desc}</p>
-                  <span className="value-tag"><Icon name="check" style={{ width: 14, height: 14 }} /> Value {d.value}</span>
                 </article>
               ))}
               {BONUSES.map((b) => (
@@ -612,7 +636,6 @@ export default function Page() {
                   <span className="card__num">Bonus</span>
                   <h3 className="card__title">{b.title}</h3>
                   <p className="card__desc">{b.desc}</p>
-                  <span className="value-tag"><Icon name="check" style={{ width: 14, height: 14 }} /> Value {b.value}</span>
                 </article>
               ))}
             </div>
@@ -786,33 +809,6 @@ export default function Page() {
                 The risk is on me, not you.
               </p>
               <p className="mt-4 review-flag" style={{ display: "inline-block" }}></p>
-            </div>
-          </div>
-        </section>
-
-        {/* ===== SECTION 11 — WHO IT'S FOR / NOT FOR ===== */}
-        <section className="section section--surface">
-          <div className="container">
-            <div className="section-head" data-animate>
-              <h2 className="h2">Is This Right for You?</h2>
-            </div>
-            <div className="fornot mt-8">
-              <div className="fornot__col fornot__col--yes" data-animate>
-                <h3 className="fornot__h">This Is For You If...</h3>
-                <ul className="fornot__list">
-                  {FOR_YOU.map((t) => (
-                    <li className="fornot__item" key={t}><Icon name="check" style={{ width: 20, height: 20 }} /><span>{t}</span></li>
-                  ))}
-                </ul>
-              </div>
-              <div className="fornot__col fornot__col--no" data-animate>
-                <h3 className="fornot__h">This Is NOT For You If...</h3>
-                <ul className="fornot__list">
-                  {NOT_FOR_YOU.map((t) => (
-                    <li className="fornot__item" key={t}><Icon name="x" style={{ width: 20, height: 20 }} /><span>{t}</span></li>
-                  ))}
-                </ul>
-              </div>
             </div>
           </div>
         </section>
